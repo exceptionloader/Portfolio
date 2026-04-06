@@ -70,6 +70,28 @@ overflow-x:auto;
 border:1px solid rgba(255,255,255,0.1)
 }
 
+.field{margin-top:12px}
+.input{
+width:100%;
+padding:14px 14px;
+border-radius:12px;
+background:#020617;
+color:#fff;
+border:1px solid rgba(255,255,255,0.12);
+outline:none
+}
+.input:focus{border-color:rgba(168,85,247,0.65);box-shadow:0 0 0 3px rgba(168,85,247,0.15)}
+.btn.secondary{background:linear-gradient(135deg,#334155,#1e293b);box-shadow:none}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.row .btn{margin-top:0}
+.muted{opacity:.72;line-height:1.6}
+.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);color:#c084fc;font-weight:600;font-size:12px}
+.demoOut{margin-top:14px}
+.demoLine{font-family:monospace;background:#020617;padding:10px;border-radius:8px;margin-top:8px;border:1px solid rgba(255,255,255,0.08)}
+.ok{color:#4ade80}
+.warn{color:#fbbf24}
+.bad{color:#fb7185}
+
 footer{text-align:center;padding:50px;opacity:.5}
 </style>
 </head>
@@ -85,6 +107,7 @@ footer{text-align:center;padding:50px;opacity:.5}
 <a href="#dashboard">Dashboard</a>
 <a href="#echo">Echo.ac</a>
 <a href="#ai">AI Analyse</a>
+<a href="#dev">Entwicklung</a>
 <a href="#contact">Kontakt</a>
 </nav>
 </header>
@@ -140,6 +163,80 @@ if(player.weapon == "minigun" && player.level < 10) {
 </div>
 </section>
 
+<section id="dev">
+<h2>Entwicklung</h2>
+<div class="card">
+<div class="pill">Discord Bot (Demo)</div>
+<h3 style="margin-top:14px">/check-user (discordId)</h3>
+<p class="muted" style="margin-top:10px">
+Dieser Bot ist eine Demo-Version für Kunden: Er simuliert einen Check eines Discord-Users gegen interne Risiko-Signale (z.B. bekannte Cheat-Communities, Re-Join Pattern, Link-Cluster). In einer echten Version werden die Datenquellen/Listen/Regeln individuell für dein Netzwerk angebunden.
+</p>
+
+<div class="field">
+<div class="row">
+<input id="discordIdInput" class="input" placeholder="Discord ID eingeben (z.B. 123456789012345678)" />
+<a href="javascript:void(0)" id="runCheckBtn" class="btn">/check-user</a>
+<a href="javascript:void(0)" id="runSampleBtn" class="btn secondary">Demo ID</a>
+</div>
+</div>
+
+<div id="botDemoOut" class="demoOut"></div>
+
+<h3 style="margin-top:22px">Was der Bot kann</h3>
+<div class="grid" style="margin-top:14px">
+<div class="card" style="padding:18px">
+<div class="stat">01</div>
+<p class="muted">Slash Command: <b>/check-user &lt;discordId&gt;</b> mit strukturierter Ausgabe (Risk Score, Flags, Hinweise).</p>
+</div>
+<div class="card" style="padding:18px">
+<div class="stat">02</div>
+<p class="muted">Server-/Community-Risiko-Matching (Demo: simuliert). Real: Matching über gepflegte Watchlists + Heuristiken.</p>
+</div>
+<div class="card" style="padding:18px">
+<div class="stat">03</div>
+<p class="muted">Audit-Logs & Export (z.B. JSON/Webhook). Real: Integrationen in Admin-Panel/CRM möglich.</p>
+</div>
+</div>
+
+<h3 style="margin-top:22px">Demo Bot Code (Node.js)</h3>
+<div class="codebox">
+// Demo: discord.js v14 (vereinfachtes Beispiel)
+// /check-user &lt;discordid&gt; - liefert Risiko-Signale (simuliert)
+import { Client, GatewayIntentBits, SlashCommandBuilder } from "discord.js";
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+const command = new SlashCommandBuilder()
+  .setName("check-user")
+  .setDescription("Check a Discord user against risk signals")
+  .addStringOption(opt => opt.setName("discordid").setDescription("Discord ID").setRequired(true));
+
+function simulateCheck(discordId) {
+  const flagged = Math.random() < 0.35;
+  const score = flagged ? 70 + Math.floor(Math.random() * 30) : 5 + Math.floor(Math.random() * 35);
+  const flags = flagged ? ["watchlist_match", "invite_cluster", "alt_pattern"] : ["no_match"];
+  return { discordId, score, flags };
+}
+
+client.on("interactionCreate", async (i) => {
+  if (!i.isChatInputCommand() || i.commandName !== "check-user") return;
+  const discordId = i.options.getString("discordid", true);
+  const result = simulateCheck(discordId);
+  await i.reply({
+    ephemeral: true,
+    content: `Result for ${result.discordId}: Risk=${result.score}/100 Flags=${result.flags.join(", ")}`,
+  });
+});
+
+client.login(process.env.DISCORD_TOKEN);
+</div>
+
+<p class="muted" style="margin-top:12px">
+Hinweis: Diese Website-Demo zeigt nur eine Simulation. Für eine echte Umsetzung müssen Datenquellen, Datenschutz und zulässige Prüf-Logik definiert werden (keine „Random“-Checks).
+</p>
+</div>
+</section>
+
 <section id="contact">
 <h2>Kontakt</h2>
 <div class="card">
@@ -149,7 +246,7 @@ if(player.weapon == "minigun" && player.level < 10) {
 </section>
 
 <footer>
-<p>© 2026 Exceptionloader x Echo.ac</p>
+<p>&copy; 2026 Exceptionloader x Echo.ac</p>
 </footer>
 
 <script>
@@ -184,6 +281,89 @@ log.className="log ai"
 log.innerText=aiMessages[Math.floor(Math.random()*aiMessages.length)]
 box.prepend(log)
 },1500)
+
+const demoRiskDb = {
+  "Analystic Network": {
+   servers: ["AN | Underground", "AN | Lua Hub", "AN | Injector Market"],
+   weights: { watchlist_match: 42, invite_cluster: 18, alt_pattern: 14, link_spam: 8 }
+  },
+};
+
+function isValidDiscordId(id){
+  return typeof id === "string" && /^\d{15,22}$/.test(id.trim())
+}
+
+function simulateBotCheck(discordId){
+  const profileSeed = discordId.split("").reduce((a,c)=> (a + (c.charCodeAt(0) * 17)) % 997, 0)
+  const flagged = (profileSeed % 100) < 37
+  const source = demoRiskDb["Analystic Network"]
+
+  const base = flagged ? 62 : 8
+  const variance = (profileSeed % 29)
+  const score = Math.min(99, base + variance)
+
+  const flags = []
+  if(flagged){
+   if((profileSeed % 2) === 0) flags.push("watchlist_match")
+   if((profileSeed % 3) === 0) flags.push("invite_cluster")
+   if((profileSeed % 5) === 0) flags.push("alt_pattern")
+   if((profileSeed % 7) === 0) flags.push("link_spam")
+  } else {
+   flags.push("no_match")
+  }
+
+  const seenServers = flagged
+   ? source.servers.slice(0, 1 + (profileSeed % source.servers.length))
+   : []
+
+  return { discordId, score, flags, seenServers, provider: "Analystic Network (Demo)" }
+}
+
+function renderBotDemo(result){
+  const out = document.getElementById("botDemoOut")
+  const line = document.createElement("div")
+  const levelClass = result.score >= 70 ? "bad" : (result.score >= 40 ? "warn" : "ok")
+  line.className = "demoLine"
+  line.innerHTML = `
+   <div><span class="${levelClass}">[BOT]</span> /check-user <b>${result.discordId}</b></div>
+   <div class="muted" style="margin-top:6px">Provider: <b>${result.provider}</b></div>
+   <div style="margin-top:6px">Risk Score: <b class="${levelClass}">${result.score}/100</b></div>
+   <div style="margin-top:6px">Flags: <b>${result.flags.join(", ")}</b></div>
+   <div style="margin-top:6px">Related Servers: <b>${result.seenServers.length ? result.seenServers.join(", ") : "—"}</b></div>
+  `
+  out.prepend(line)
+}
+
+function runBotDemo(discordId){
+  const out = document.getElementById("botDemoOut")
+  if(!isValidDiscordId(discordId)){
+   const line = document.createElement("div")
+   line.className = "demoLine"
+   line.innerHTML = `<div><span class="bad">[BOT]</span> Invalid Discord ID. Bitte eine numerische ID (15-22 Stellen) eingeben.</div>`
+   out.prepend(line)
+   return
+  }
+  renderBotDemo(simulateBotCheck(discordId.trim()))
+}
+
+const runCheckBtn = document.getElementById("runCheckBtn")
+const runSampleBtn = document.getElementById("runSampleBtn")
+const discordIdInput = document.getElementById("discordIdInput")
+
+runCheckBtn.addEventListener("click", ()=> runBotDemo(discordIdInput.value))
+runSampleBtn.addEventListener("click", ()=>{
+  const samples = [
+   "123456789012345678",
+   "987654321098765432",
+   "111222333444555666",
+  ]
+  const sample = samples[Math.floor(Math.random()*samples.length)]
+  discordIdInput.value = sample
+  runBotDemo(sample)
+})
+discordIdInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") runBotDemo(discordIdInput.value)
+})
 </script>
 
 </body>
