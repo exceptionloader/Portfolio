@@ -3,113 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exceptionloader | FiveM Analyst</title>
+<title>Exceptionloader | Elite System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:#020617;color:#e2e8f0}
-header{padding:50px;text-align:center;background:linear-gradient(135deg,#020617,#0f172a)}
-header h1{font-size:50px;font-weight:800}
-header span{color:#38bdf8}
+body{background:#05010a;color:#fff;overflow-x:hidden}
+
+body::before{
+content:"";
+position:fixed;
+width:600px;height:600px;
+background:radial-gradient(circle,#a855f7,transparent);
+top:-200px;left:-200px;
+filter:blur(150px)
+}
+
+header{text-align:center;padding:80px}
+header h1{font-size:60px;font-weight:800}
+header span{color:#a855f7;text-shadow:0 0 20px #a855f7}
+header p{opacity:.7;margin-top:10px}
+
+.logo{font-size:22px;margin-top:10px;color:#c084fc;letter-spacing:2px}
+
 nav{margin-top:20px}
-nav a{margin:0 15px;color:#38bdf8;text-decoration:none}
-section{padding:70px 10%}
-.card{background:#0f172a;padding:25px;border-radius:20px;margin-top:20px;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.stat{font-size:28px;font-weight:700}
-.btn{display:inline-block;margin-top:20px;padding:12px 25px;border-radius:10px;background:#38bdf8;color:#020617;text-decoration:none;font-weight:600}
-footer{text-align:center;padding:40px;opacity:.6}
+nav a{margin:0 15px;color:#c084fc;text-decoration:none}
+
+section{padding:90px 10%}
+
+.card{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+padding:30px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 40px rgba(168,85,247,0.2);
+transition:.3s
+}
+.card:hover{transform:translateY(-8px) scale(1.02)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
+.stat{font-size:34px;color:#a855f7;font-weight:700}
+
+.btn{
+margin-top:20px;
+padding:15px 30px;
+border-radius:12px;
+background:linear-gradient(135deg,#a855f7,#7c3aed);
+color:#fff;text-decoration:none;font-weight:600;
+box-shadow:0 0 20px #a855f7
+}
+
+.log{font-family:monospace;background:#020617;padding:10px;border-radius:8px;margin-top:8px;color:#4ade80}
+.alert{color:#f87171}
+.ai{color:#38bdf8}
+
+.codebox{
+background:#020617;
+padding:20px;
+border-radius:12px;
+margin-top:15px;
+font-family:monospace;
+font-size:14px;
+overflow-x:auto;
+border:1px solid rgba(255,255,255,0.1)
+}
+
+footer{text-align:center;padding:50px;opacity:.5}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1><span>Exceptionloader</span></h1>
-<p>FiveM Data Intelligence • Economy • Performance</p>
+<h1><span>Exception</span> Loader</h1>
+<div class="logo">ECHO.AC SYSTEM</div>
+<p>AI Powered FiveM Intelligence</p>
 <nav>
+<a href="#about">Über mich</a>
 <a href="#dashboard">Dashboard</a>
-<a href="#services">Services</a>
-<a href="#reviews">Reviews</a>
+<a href="#echo">Echo.ac</a>
+<a href="#ai">AI Analyse</a>
 <a href="#contact">Kontakt</a>
 </nav>
 </header>
 
+<section id="about">
+<h2>Über mich</h2>
+<div class="card">
+<p>
+Ich bin <b>Eno (17)</b> und spezialisiere mich auf FiveM Analyse, Anti-Cheat Detection und Server Optimization.
+<br><br>
+Mit meinem eigenen System <b>Echo.ac</b> entwickle ich individuelle Detection-Methoden und analysiere Spielerverhalten auf höchstem Level.
+</p>
+</div>
+</section>
+
 <section id="dashboard">
-<h2>Live Dashboard</h2>
-<div class="grid">
-<div class="card"><div class="stat" id="players">0</div><p>Aktive Spieler</p></div>
-<div class="card"><div class="stat" id="revenue">0€</div><p>Server Einnahmen</p></div>
-<div class="card"><div class="stat" id="uptime">0%</div><p>Server Stability</p></div>
-</div>
-<canvas id="chart" style="margin-top:40px"></canvas>
-</section>
-
-<section id="services">
-<h2>Services & Preise</h2>
-<div class="grid">
+<h2>Live Detection Feed</h2>
 <div class="card">
-<h3>Starter</h3>
-<p>Basic Analyse + Report</p>
-<h2>49€</h2>
-</div>
-<div class="card">
-<h3>Pro</h3>
-<p>Economy + Performance Optimierung</p>
-<h2>149€</h2>
-</div>
-<div class="card">
-<h3>Elite</h3>
-<p>Full Server Analyse + Strategien</p>
-<h2>299€</h2>
-</div>
+<div id="feed"></div>
 </div>
 </section>
 
-<section id="reviews">
-<h2>Kundenbewertungen</h2>
-<div class="grid">
-<div class="card"><p>"Server läuft jetzt perfekt, Spielerzahlen gestiegen!"</p><b>- jan879@gmail.com(Premium Kunde)</b></div>
-<div class="card"><p>"Beste Entscheidung, Einnahmen verdoppelt."</p><b>- luizsua@web.de(Premium Kunde)</b></div>
-<div class="card"><p>"Sehr professionell, klare Datenanalyse."</p><b>- Redura-City(Projektinhaber)</b></div>
+<section id="echo">
+<h2>Echo.ac System</h2>
+<div class="card">
+
+<h3>Custom Detection</h3>
+<div class="codebox">
+if(player.money > 1000000) {
+ flagPlayer("Money Exploit")
+}
+
+if(player.weapon == "minigun" && player.level < 10) {
+ flagPlayer("Illegal Weapon Spawn")
+}
+</div>
+
+<h3>Custom Strings</h3>
+<div class="codebox">
+"lua_executor"
+"modmenu"
+"redengine"
+"injector"
+</div>
+
+</div>
+</section>
+
+<section id="ai">
+<h2>AI Analyse System</h2>
+<div class="card">
+<div id="aiLogs"></div>
 </div>
 </section>
 
 <section id="contact">
 <h2>Kontakt</h2>
 <div class="card">
-<p>Bereit deinen Server zu skalieren?</p>
-<a class="btn" href="businessbeckbw@gmail.com">Jetzt starten</a>
+<p>Starte jetzt dein Upgrade</p>
+<a href="mailto:businessbeckbw@gmail.com" class="btn">Kontakt</a>
 </div>
 </section>
 
 <footer>
-<p>© 2026 Exceptionloader</p>
+<p>© 2026 Analytics Network x Echo.ac</p>
 </footer>
 
 <script>
-function animateValue(id,start,end,duration,suffix=""){
-let obj=document.getElementById(id)
-let range=end-start
-let startTime=null
-function step(timestamp){
-if(!startTime) startTime=timestamp
-let progress=Math.min((timestamp-startTime)/duration,1)
-obj.innerHTML=Math.floor(progress*range+start)+suffix
-if(progress<1) requestAnimationFrame(step)
-}
-requestAnimationFrame(step)
-}
+const feedLogs=[
+"[DETECTION] Speed Hack erkannt",
+"[WARNING] Suspicious Money Spike",
+"[DETECTION] Mod Menu Injection",
+"[ALERT] Teleport Abuse",
+"[SECURITY] Lua Executor detected"
+]
 
-animateValue("players",0,128,2000)
-animateValue("revenue",0,5420,2000,"€")
-animateValue("uptime",0,99,2000,"%")
+setInterval(()=>{
+const box=document.getElementById("feed")
+const log=document.createElement("div")
+log.className="log alert"
+log.innerText=feedLogs[Math.floor(Math.random()*feedLogs.length)]
+box.prepend(log)
+},1200)
 
-const ctx=document.getElementById('chart')
-new Chart(ctx,{
-type:'line',
-data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Players',data:[50,80,60,120,140,180,200]}]}
-})
+const aiMessages=[
+"AI: Spieler Verhalten abnormal erkannt",
+"AI: Pattern deutet auf Cheat hin",
+"AI: Risiko-Level erhöht",
+"AI: Analyse abgeschlossen → Flag gesetzt",
+"AI: Ungewöhnliche Aktivität bestätigt"
+]
+
+setInterval(()=>{
+const box=document.getElementById("aiLogs")
+const log=document.createElement("div")
+log.className="log ai"
+log.innerText=aiMessages[Math.floor(Math.random()*aiMessages.length)]
+box.prepend(log)
+},1500)
 </script>
 
 </body>
