@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exceptionloader | FiveM Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#020617;color:#e2e8f0}
+header{padding:50px;text-align:center;background:linear-gradient(135deg,#020617,#0f172a)}
+header h1{font-size:50px;font-weight:800}
+header span{color:#38bdf8}
+nav{margin-top:20px}
+nav a{margin:0 15px;color:#38bdf8;text-decoration:none}
+section{padding:70px 10%}
+.card{background:#0f172a;padding:25px;border-radius:20px;margin-top:20px;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.stat{font-size:28px;font-weight:700}
+.btn{display:inline-block;margin-top:20px;padding:12px 25px;border-radius:10px;background:#38bdf8;color:#020617;text-decoration:none;font-weight:600}
+footer{text-align:center;padding:40px;opacity:.6}
+</style>
+</head>
+<body>
+
+<header>
+<h1><span>Exceptionloader</span></h1>
+<p>FiveM Data Intelligence • Economy • Performance</p>
+<nav>
+<a href="#dashboard">Dashboard</a>
+<a href="#services">Services</a>
+<a href="#reviews">Reviews</a>
+<a href="#contact">Kontakt</a>
+</nav>
+</header>
+
+<section id="dashboard">
+<h2>Live Dashboard</h2>
+<div class="grid">
+<div class="card"><div class="stat" id="players">0</div><p>Aktive Spieler</p></div>
+<div class="card"><div class="stat" id="revenue">0€</div><p>Server Einnahmen</p></div>
+<div class="card"><div class="stat" id="uptime">0%</div><p>Server Stability</p></div>
+</div>
+<canvas id="chart" style="margin-top:40px"></canvas>
+</section>
+
+<section id="services">
+<h2>Services & Preise</h2>
+<div class="grid">
+<div class="card">
+<h3>Starter</h3>
+<p>Basic Analyse + Report</p>
+<h2>49€</h2>
+</div>
+<div class="card">
+<h3>Pro</h3>
+<p>Economy + Performance Optimierung</p>
+<h2>149€</h2>
+</div>
+<div class="card">
+<h3>Elite</h3>
+<p>Full Server Analyse + Strategien</p>
+<h2>299€</h2>
+</div>
+</div>
+</section>
+
+<section id="reviews">
+<h2>Kundenbewertungen</h2>
+<div class="grid">
+<div class="card"><p>"Server läuft jetzt perfekt, Spielerzahlen gestiegen!"</p><b>- jan879@gmail.com(Premium Kunde)</b></div>
+<div class="card"><p>"Beste Entscheidung, Einnahmen verdoppelt."</p><b>- luizsua@web.de(Premium Kunde)</b></div>
+<div class="card"><p>"Sehr professionell, klare Datenanalyse."</p><b>- Redura-City(Projektinhaber)</b></div>
+</div>
+</section>
+
+<section id="contact">
+<h2>Kontakt</h2>
+<div class="card">
+<p>Bereit deinen Server zu skalieren?</p>
+<a class="btn" href="businessbeckbw@gmail.com">Jetzt starten</a>
+</div>
+</section>
+
+<footer>
+<p>© 2026 Exceptionloader</p>
+</footer>
+
+<script>
+function animateValue(id,start,end,duration,suffix=""){
+let obj=document.getElementById(id)
+let range=end-start
+let startTime=null
+function step(timestamp){
+if(!startTime) startTime=timestamp
+let progress=Math.min((timestamp-startTime)/duration,1)
+obj.innerHTML=Math.floor(progress*range+start)+suffix
+if(progress<1) requestAnimationFrame(step)
+}
+requestAnimationFrame(step)
+}
+
+animateValue("players",0,128,2000)
+animateValue("revenue",0,5420,2000,"€")
+animateValue("uptime",0,99,2000,"%")
+
+const ctx=document.getElementById('chart')
+new Chart(ctx,{
+type:'line',
+data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Players',data:[50,80,60,120,140,180,200]}]}
+})
+</script>
+
+</body>
+</html>
